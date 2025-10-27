@@ -647,5 +647,25 @@ def main():
     print("Bot is running (ClawCloud).")
     bot.infinity_polling(skip_pending=True, timeout=30)
 
+# ------------------- Keepalive for Render free plan -------------------
+# This creates a tiny web server so Render's "Web Service" stays alive
+from flask import Flask
+import threading
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "PowerPointBreak Bot is running OK!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+# Start keepalive web server in background thread
+threading.Thread(target=run).start()
+# ----------------------------------------------------------------------
+
+# Now start the Telegram bot
 if __name__ == "__main__":
-    main()
+    print("Bot is running (Render Free 24/7 mode).")
+    bot.infinity_polling(skip_pending=True, timeout=30)
